@@ -7,15 +7,13 @@ it will reply depending on the defined sentences
 # Requirements
 1. Twitter Account
 2. NodeJS
-3. Be FUN!!
+3. MongoDB
+4. Be FUN!!
 ```
 
-```ssh
+```
 npm install
-
 npm start
-
 or
-
 npm run nodemon
 ```
