@@ -2,6 +2,9 @@ var TwitterPackage = require('twitter');
 var mongoose = require('mongoose');
 var config = require('./config');
 
+// Get the model from database
+var Tweet = require('./models/tweetSchema');
+
 // For twitter API
 var secret = {
     consumer_key: config.consumer_key,
@@ -21,6 +24,7 @@ mongoose.connect(config.uri, options);
 
 mongoose.connection.on('connected', function() {
     console.log('Mongoose default connection open to ' + config.uri);
+    twitterInit();
 });
 
 // If the connection throws an error
@@ -36,7 +40,15 @@ function twitterInit() {
 
         stream.on('data', function(tweet) {
 
-            console.log(tweet);
+            var TweetData = new Tweet({
+                tweet: JSON.stringify(tweet),
+                tweetID: tweet.id_str
+            })
+
+            TweetData.save(function(err) {
+                if (err) throw err;
+                console.log("Tweets saved successfully");
+            })
 
             //build our reply object
             var statusObj = {
