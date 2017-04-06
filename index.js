@@ -1,6 +1,8 @@
 var TwitterPackage = require('twitter');
+var mongoose = require('mongoose');
 var config = require('./config');
 
+// For twitter API
 var secret = {
     consumer_key: config.consumer_key,
     consumer_secret: config.consumer_secret,
@@ -10,35 +12,54 @@ var secret = {
 
 var Twitter = new TwitterPackage(secret);
 
-Twitter.stream('statuses/filter', {
-    track: 'demo_Tweet,kitchenSG,horsesID'
-}, function(stream) {
+var options = {
+    user: config.mongo_user,
+    pass: config.mongo_pwd
+};
 
-    stream.on('data', function(tweet) {
+mongoose.connect(config.uri, options);
 
-        console.log(tweet);
+mongoose.connection.on('connected', function() {
+    console.log('Mongoose default connection open to ' + config.uri);
+});
 
-        //build our reply object
-        var statusObj = {
-            status: "Hi @" + tweet.user.screen_name + ", How are you?",
-            in_reply_to_status_id: tweet.id_str
-        }
+// If the connection throws an error
+mongoose.connection.on('error', function(err) {
+    console.log('Mongoose default connection error: ' + err);
+});
 
-        //call the post function to tweet something
-        Twitter.post('statuses/update', statusObj, function(error, tweetReply, response) {
 
-            //if we get an error print it out
-            if (error) {
-                console.log(error);
+function twitterInit() {
+    Twitter.stream('statuses/filter', {
+        track: 'demo_Tweet,kitchenSG ,horsesID'
+    }, function(stream) {
+
+        stream.on('data', function(tweet) {
+
+            console.log(tweet);
+
+            //build our reply object
+            var statusObj = {
+                status: "Hi @" + tweet.user.screen_name + ", How are you?",
+                in_reply_to_status_id: tweet.id_str
             }
 
-            //print the text of the tweet we sent out
-            console.log(tweetReply.text);
+            //call the post function to tweet something
+            Twitter.post('statuses/update', statusObj, function(error, tweetReply, response) {
+
+                //if we get an error print it out
+                if (error) {
+                    console.log(error);
+                }
+
+                //print the text of the tweet we sent out
+                console.log(tweetReply.text);
+            });
+        });
+
+        stream.on('error', function(error) {
+            //print out the error
+            console.log(error);
         });
     });
-
-    stream.on('error', function(error) {
-        //print out the error
-        console.log(error);
-    });
-});
+}
