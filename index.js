@@ -11,12 +11,12 @@ var secret = {
 var Twitter = new TwitterPackage(secret);
 
 Twitter.stream('statuses/filter', {
-    track: 'demo_Tweet'
+    track: 'demo_Tweet,kitchenSG,horsesID'
 }, function(stream) {
 
     stream.on('data', function(tweet) {
 
-        // console.log(tweet);
+        console.log(tweet);
 
         //build our reply object
         var statusObj = {
