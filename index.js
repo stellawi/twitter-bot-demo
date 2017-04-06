@@ -20,6 +20,7 @@ var options = {
     pass: config.mongo_pwd
 };
 
+mongoose.Promise = global.Promise;
 mongoose.connect(config.uri, options);
 
 mongoose.connection.on('connected', function() {
