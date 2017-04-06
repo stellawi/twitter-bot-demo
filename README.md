@@ -17,3 +17,16 @@ npm start
 or
 npm run nodemon
 ```
+You need to create your own config file. For this project the configuration file is named config.json
+
+```
+{
+    "consumer_key": "yourkey",
+    "consumer_secret": "yourkey",
+    "access_token_key": "yourkey",
+    "access_token_secret": "yourkey",
+    "uri": "mongodb://localhost/admin",
+    "mongo_user": "mongoDBuser",
+    "mongo_pwd": "mongoDBpassword"}
+
+```
