@@ -11,7 +11,7 @@ it will reply depending on the defined sentences
 4. Be FUN!!
 ```
 
-```
+```sh
 npm install
 npm start
 or
